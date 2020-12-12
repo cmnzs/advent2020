@@ -4,12 +4,12 @@ import files.loadFile
 
 fun main() {
     val s = loadFile("day9/day9.txt")
-    val x = parseFile(s)
-    val validation = validate(x, 25)
+    val nums = parseFile(s)
+    val validNums = validate(nums, 25)
 
-    val targetValue = x[validation.first { !it.second }.first]
+    val targetValue = validNums.first { !it.second }.first
     println("First invalid: ${targetValue}")
-    val partTwoComponents = searchContiguousSum(x, targetValue)
+    val partTwoComponents = searchContiguousSum(nums, targetValue)
     println("Part 2: ${partTwoComponents.min()!! + partTwoComponents.max()!!}")
 }
 
@@ -17,14 +17,14 @@ fun parseFile(s: String): List<Long> {
     return s.split("\n").map { it.trim() }.filter { it.isNotEmpty() }.map { it.toLong() }
 }
 
-fun validate(x: List<Long>, preambleLength: Int): List<Pair<Int, Boolean>> {
+fun validate(x: List<Long>, preambleLength: Int): List<Pair<Long, Boolean>> {
 
     return x.mapIndexed { i, it ->
         if (i < preambleLength) {
-            i to true
+            it to true
         } else {
             val slidingWindow = x.slice((i-preambleLength)..i)
-            (i to hasTwoSum(slidingWindow, it))
+            (it to hasTwoSum(slidingWindow, it))
         }
     }
 }
