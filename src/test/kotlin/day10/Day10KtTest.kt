@@ -66,4 +66,18 @@ internal class Day10KtTest {
         val f = parseFile(s2)
         assertEquals(Pair(22, 10), countDifferences(f))
     }
+
+    @Test
+    fun testBuild() {
+        val f = parseFile(s1)
+
+        assertEquals(8, buildDistinctArrangements(f))
+    }
+
+    @Test
+    fun testBuild2() {
+        val f = parseFile(s2)
+
+        assertEquals(19208, buildDistinctArrangements(f))
+    }
 }
