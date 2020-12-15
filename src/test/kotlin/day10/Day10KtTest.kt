@@ -69,15 +69,15 @@ internal class Day10KtTest {
 
     @Test
     fun testBuild() {
-        val f = parseFile(s1)
+        val f = parseFile(s1).sorted()
 
-        assertEquals(8, buildDistinctArrangements(f))
+        assertEquals(8, buildDistinctArrangements(f, 0, hashMapOf()))
     }
 
     @Test
     fun testBuild2() {
-        val f = parseFile(s2)
+        val f = parseFile(s2).sorted()
 
-        assertEquals(19208, buildDistinctArrangements(f))
+        assertEquals(19208, buildDistinctArrangements(listOf(0) + f, 0, hashMapOf()))
     }
 }

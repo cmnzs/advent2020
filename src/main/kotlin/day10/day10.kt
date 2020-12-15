@@ -10,75 +10,44 @@ fun main() {
     val p1 = counts.first * counts.second
     println("Part 1: $counts,  $p1")
 
-    val p2: Long = buildDistinctArrangements(f)
+    val p2: Long = buildDistinctArrangements(listOf(0) + f.sorted(), 0, hashMapOf())
     println("Part 2: $p2")
 }
 
-fun buildDistinctArrangements(l: List<Int>): Long {
-    var multiplier = 1
-    val f = l.sorted().toMutableList()
-//    while(f.isNotEmpty()) {
-//        mult
-//    }
-//
-//    return multiplier
-    return Solution(f).solve()
+fun buildDistinctArrangements(f: List<Int>, i: Int, mem: HashMap<Int, Long>): Long {
+    if (i in mem) {
+        return mem[i]!!
+    }
+
+    if (i == f.size - 1) {
+        return 1L
+    }
+
+    val x = getNextCandidatesIndexes(i, f)
+    println(x)
+    val numArrangements = x.map {
+        buildDistinctArrangements(f, it, mem)
+    }.sum()
+
+    mem[i] = numArrangements
+    return mem[i]!!
 }
 
-class Solution(private val sortedValues: List<Int>) {
+private fun getNextCandidatesIndexes(current: Int, data: List<Int>): List<Int> {
+    val m = mutableListOf<Int>()
 
-    private val candidateSolutions = mutableListOf<List<Int>>()
-    private var counter = 0L
-
-    fun solve(): Long {
-
-        backtrackDFS(listOf(0), sortedValues)
-//        return candidateSolutions.size
-        return counter
-    }
-
-    private fun backtrackDFS(a: List<Int>, data: List<Int>) {
-//        println("isSolution(a) ${isSolution(a)}, ${a} ${data}")
-        if (isSolution(a)) {
-            processSolution(a)
+    for (i in current+1 until data.size) {
+        val d = data[i]
+        if (d < data[current]) {
+            continue
+        }
+        if ((d - data[current]) in 1..3) {
+            m.add(i)
         } else {
-            val current = a.last()
-            val candidateSteps2 = getNextCandidates(current, data)
-            candidateSteps2.forEach {
-                backtrackDFS(a + it, data - it)
-            }
+            break
         }
     }
-
-    private fun getNextCandidatesOriginal(current: Int, data: List<Int>): List<Int> {
-        return data.filter { (it - current) in 1..3 }
-    }
-
-    private fun getNextCandidates(current: Int, data: List<Int>): List<Int> {
-        val m = mutableListOf<Int>()
-        for (d in data) {
-//            println("d - current: ${d} ${current}, ${d - current} ${(d - current) in 1..3}")
-            if (d < current) {
-                continue
-            }
-            if ((d - current) in 1..3) {
-                m.add(d)
-            } else {
-                break
-            }
-        }
-        return m
-    }
-
-    private fun isSolution(l: List<Int>): Boolean {
-        return l.last() == sortedValues.last()
-    }
-
-    private fun processSolution(l: List<Int>) {
-//        candidateSolutions.add(l)
-        counter += 1
-//        if (counter % 100L == 0) println(counter)
-    }
+    return m
 }
 
 
